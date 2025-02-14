@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/Header";
@@ -25,8 +24,11 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} ${inter.className} antialiased`}>
+      <html lang="en">
+        <body
+          className={`${inter.className} ${inter.className} antialiased`}
+          suppressHydrationWarning
+        >
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -35,7 +37,7 @@ export default function RootLayout({
           >
             {/* Header */}
             <Header />
-            {children}
+            <main className="min-h-screen">{children}</main>
           </ThemeProvider>
         </body>
       </html>

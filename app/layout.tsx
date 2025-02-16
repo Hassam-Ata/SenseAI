@@ -23,12 +23,9 @@ export default function RootLayout({
       appearance={{
         baseTheme: dark,
       }}
-    >
-      <html lang="en">
-        <body
-          className={`${inter.className} ${inter.className} antialiased`}
-          suppressHydrationWarning
-        >
+     >
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.className} ${inter.className} antialiased`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

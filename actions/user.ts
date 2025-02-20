@@ -11,11 +11,19 @@ interface UpdateUserData {
   skills: string[];
 }
 
+interface UpdateUserResponse {
+  success: boolean;
+  updatedUser: User;
+  industryInsight: IndustryInsight;
+}
+
 interface OnboardingStatus {
   isOnboarded: boolean;
 }
 
-export async function updateUser(data: UpdateUserData): Promise<User> {
+export async function updateUser(
+  data: UpdateUserData
+): Promise<UpdateUserResponse> {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
@@ -52,7 +60,7 @@ export async function updateUser(data: UpdateUserData): Promise<User> {
           });
         }
 
-        return await tx.user.update({
+        const updatedUser = await tx.user.update({
           where: {
             id: user.id,
           },
@@ -63,19 +71,21 @@ export async function updateUser(data: UpdateUserData): Promise<User> {
             skills: data.skills,
           },
         });
+
+        return { updatedUser, industryInsight };
       },
       {
         timeout: 10000,
       }
     );
 
-    return result;
+    return { success: true, ...result };
   } catch (error) {
     console.error(
       "Error updating user",
       error instanceof Error ? error.message : String(error)
     );
-    throw new Error("Failed to Update user");
+    throw new Error("Failed to update user");
   }
 }
 

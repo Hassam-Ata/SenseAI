@@ -38,7 +38,7 @@ import { toast } from "sonner";
 
 
 const OnboardingForm = ({ industries }: { industries: Industry[] }) => {
-  const [selectedIndustry, setSelectedIndustry] = useState<Industry | null>(null);
+  const [selectedIndustry, setSelectedIndustry] = useState<Industry | undefined>(undefined);
 
   const router = useRouter();
 

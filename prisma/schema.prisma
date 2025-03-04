@@ -33,7 +33,7 @@ model Assessment {
   id             String   @id @default(cuid())
   userId         String
   user           User     @relation(fields: [userId], references: [id])
-  quizScore      Float
+  quizScore      Float // Overall quiz score
   questions      Json[] // Array of {question, answer, userAnswer, isCorrect}
   category       String // "Technical", "Behavioral", etc.
   improvementTip String? // AI-generated improvement tip
@@ -82,11 +82,11 @@ model IndustryInsight {
 
   // Industry trends
   growthRate  Float // Industry growth rate
-  demandLevel DemandLevel
+  demandLevel String // "High", "Medium", "Low"
   topSkills   String[] // Most in-demand skills
 
   // Market conditions
-  marketOutlook MarketOutlook // "Positive", "Neutral", "Negative"
+  marketOutlook String // "Positive", "Neutral", "Negative"
   keyTrends     String[] // Array of current industry trends
 
   // Learning suggestions
@@ -96,16 +96,4 @@ model IndustryInsight {
   nextUpdate  DateTime // Scheduled update time
 
   @@index([industry])
-}
-
-enum DemandLevel {
-  HIGH
-  MEDIUM
-  LOW
-}
-
-enum MarketOutlook {
-  POSITIVE
-  NEUTRAL
-  NEGATIVE
 }

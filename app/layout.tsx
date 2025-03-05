@@ -26,7 +26,10 @@ export default function RootLayout({
       }}
     >
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} ${inter.className} antialiased`}>
+        <body
+          className={`${inter.className} ${inter.className} antialiased`}
+          suppressHydrationWarning
+        >
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

@@ -2,11 +2,15 @@ import db from "../prisma";
 import { inngest } from "./client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY is not defined in environment variables");
+}
+const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export const generateIndustryInsights = inngest.createFunction(
-  { name: "Generate Industry Insights" },
+  { id: "generate-industry-insights", name: "Generate Industry Insights" },
   { cron: "0 0 * * 0" }, // Run every Sunday at midnight
   async ({ event, step }) => {
     const industries = await step.run("Fetch industries", async () => {
@@ -44,7 +48,13 @@ export const generateIndustryInsights = inngest.createFunction(
         prompt
       );
 
-      const text = res.response.candidates[0].content.parts[0].text || "";
+      const candidates = res.response?.candidates;
+      if (!candidates || candidates.length === 0) {
+        throw new Error("No candidates found in the response");
+      }
+
+      const firstPart = candidates[0].content?.parts?.[0];
+      const text = "text" in firstPart ? firstPart.text : "";
       const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
       const insights = JSON.parse(cleanedText);

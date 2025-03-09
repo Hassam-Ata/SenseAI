@@ -1,6 +1,7 @@
 "use client";
 
-import { generateQuiz, saveQuizResult } from "@/actions/interview";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,33 +10,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import useFetch from "@/hooks/useFetch";
+import { Label } from "@/components/ui/label";
+import { generateQuiz, saveQuizResult } from "@/actions/interview";
 
-import { useEffect, useState } from "react";
 import { BarLoader } from "react-spinners";
-import { toast } from "sonner";
+import useFetch from "@/hooks/useFetch";
+import QuizResult from "./QuizResult";
 
-const Quiz = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [showExplanation, setShowExplanation] = useState(false);
+// Define the types
+interface Question {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  explanation: string;
+}
+
+export default function Quiz() {
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [answers, setAnswers] = useState<(string | null)[]>([]);
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
   const {
     loading: generatingQuiz,
     fn: generateQuizFn,
     data: quizData,
-  } = useFetch(generateQuiz);
+  } = useFetch<Question[]>(generateQuiz);
 
   const {
     loading: savingResult,
     fn: saveQuizResultFn,
     data: resultData,
     setData: setResultData,
-  } = useFetch(saveQuizResult);
-
-  console.log(resultData);
+  } = useFetch<any>(saveQuizResult);
 
   useEffect(() => {
     if (quizData) {
@@ -44,13 +51,13 @@ const Quiz = () => {
   }, [quizData]);
 
   const handleAnswer = (answer: string) => {
-    const newAnswers = [...answers]; // Fix: Spread the correct state variable
+    const newAnswers = [...answers];
     newAnswers[currentQuestion] = answer;
     setAnswers(newAnswers);
   };
 
   const handleNext = () => {
-    if (currentQuestion < quizData.length - 1) {
+    if (currentQuestion < (quizData?.length ?? 0) - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setShowExplanation(false);
     } else {
@@ -59,13 +66,13 @@ const Quiz = () => {
   };
 
   const calculateScore = () => {
+    if (!quizData) return 0;
     let correct = 0;
     answers.forEach((answer, index) => {
       if (answer === quizData[index].correctAnswer) {
         correct++;
       }
     });
-
     return (correct / quizData.length) * 100;
   };
 
@@ -73,15 +80,33 @@ const Quiz = () => {
     const score = calculateScore();
     try {
       await saveQuizResultFn(quizData, answers, score);
-      toast.success("Quiz Completed");
+      toast.success("Quiz completed!");
     } catch (error) {
-      const err = error as Error;
-      toast.error(err.message || "Failed to save quiz result");
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to save quiz results";
+      toast.error(errorMessage);
     }
+  };
+
+  const startNewQuiz = () => {
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setShowExplanation(false);
+    generateQuizFn();
+    setResultData(null);
   };
 
   if (generatingQuiz) {
     return <BarLoader className="mt-4" width={"100%"} color="gray" />;
+  }
+
+  // Show results if quiz is completed
+  if (resultData) {
+    return (
+      <div className="mx-2">
+        <QuizResult result={resultData} onStartNew={startNewQuiz} />
+      </div>
+    );
   }
 
   if (!quizData) {
@@ -96,9 +121,8 @@ const Quiz = () => {
             skills. Take your time and choose the best answer for each question.
           </p>
         </CardContent>
-
         <CardFooter>
-          <Button className="w-full" onClick={generateQuizFn}>
+          <Button onClick={generateQuizFn} className="w-full">
             Start Quiz
           </Button>
         </CardFooter>
@@ -115,16 +139,15 @@ const Quiz = () => {
           Question {currentQuestion + 1} of {quizData.length}
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <p className="text-lg font-medium">{question.question}</p>
-
         <RadioGroup
-          className="space-y-2"
           onValueChange={handleAnswer}
-          value={answers[currentQuestion]}
+          value={answers[currentQuestion] || ""}
+          className="space-y-2"
         >
           {question.options.map((option: string, index: number) => (
-            <div className="flex items-center space-x-2" key={index}>
+            <div key={index} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={`option-${index}`} />
               <Label htmlFor={`option-${index}`}>{option}</Label>
             </div>
@@ -138,8 +161,7 @@ const Quiz = () => {
           </div>
         )}
       </CardContent>
-
-      <CardFooter>
+      <CardFooter className="flex justify-between">
         {!showExplanation && (
           <Button
             onClick={() => setShowExplanation(true)}
@@ -149,11 +171,10 @@ const Quiz = () => {
             Show Explanation
           </Button>
         )}
-
         <Button
           onClick={handleNext}
-          className="ml-auto"
           disabled={!answers[currentQuestion] || savingResult}
+          className="ml-auto"
         >
           {savingResult && (
             <BarLoader className="mt-4" width={"100%"} color="gray" />
@@ -165,6 +186,4 @@ const Quiz = () => {
       </CardFooter>
     </Card>
   );
-};
-
-export default Quiz;
+}

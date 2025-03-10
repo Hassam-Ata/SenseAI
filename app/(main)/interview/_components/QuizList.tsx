@@ -83,6 +83,7 @@ const QuizList = ({ assessments }: AssessmentType) => {
           <DialogHeader>
             <DialogTitle></DialogTitle>
           </DialogHeader>
+          {/* gg */}
           <QuizResult
             result={selectedQuiz}
             onStartNew={() => router.push("/interview/mock")}

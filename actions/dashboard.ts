@@ -1,6 +1,5 @@
 "use server";
 
-import { Industry } from "@/data/industries";
 import db from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";

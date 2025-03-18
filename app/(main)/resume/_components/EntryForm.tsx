@@ -1,4 +1,4 @@
-// app/resume/_components/entry-form.jsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -16,18 +16,35 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { entrySchema } from "@/app/lib/schema";
-import { Sparkles, PlusCircle, X, Pencil, Save, Loader2 } from "lucide-react";
+import { Sparkles, PlusCircle, X, Loader2 } from "lucide-react";
 import { improveWithAI } from "@/actions/resume";
 import { toast } from "sonner";
 import useFetch from "@/hooks/useFetch";
 
-const formatDisplayDate = (dateString:string) => {
+// Define TypeScript types for the form
+interface Entry {
+  title: string;
+  organization: string;
+  startDate: string;
+  endDate?: string;
+  description: string;
+  current: boolean;
+}
+
+interface EntryFormProps {
+  type: "Experience" | "Education" | "Project";
+  entries: Entry[];
+  onChange: (updatedEntries: Entry[]) => void;
+}
+
+// Ensure formatDisplayDate handles undefined properly
+const formatDisplayDate = (dateString?: string): string => {
   if (!dateString) return "";
   const date = parse(dateString, "yyyy-MM", new Date());
   return format(date, "MMM yyyy");
 };
 
-export function EntryForm({ type, entries, onChange }) {
+export function EntryForm({ type, entries, onChange }: EntryFormProps) {
   const [isAdding, setIsAdding] = useState(false);
 
   const {
@@ -37,7 +54,7 @@ export function EntryForm({ type, entries, onChange }) {
     reset,
     watch,
     setValue,
-  } = useForm({
+  } = useForm<Entry>({
     resolver: zodResolver(entrySchema),
     defaultValues: {
       title: "",
@@ -52,7 +69,7 @@ export function EntryForm({ type, entries, onChange }) {
   const current = watch("current");
 
   const handleAdd = handleValidation((data) => {
-    const formattedEntry = {
+    const formattedEntry: Entry = {
       ...data,
       startDate: formatDisplayDate(data.startDate),
       endDate: data.current ? "" : formatDisplayDate(data.endDate),
@@ -64,7 +81,7 @@ export function EntryForm({ type, entries, onChange }) {
     setIsAdding(false);
   });
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
     const newEntries = entries.filter((_, i) => i !== index);
     onChange(newEntries);
   };
@@ -76,7 +93,6 @@ export function EntryForm({ type, entries, onChange }) {
     error: improveError,
   } = useFetch(improveWithAI);
 
-  // Add this effect to handle the improvement result
   useEffect(() => {
     if (improvedContent && !isImproving) {
       setValue("description", improvedContent);
@@ -87,7 +103,6 @@ export function EntryForm({ type, entries, onChange }) {
     }
   }, [improvedContent, improveError, isImproving, setValue]);
 
-  // Replace handleImproveDescription with this
   const handleImproveDescription = async () => {
     const description = watch("description");
     if (!description) {
@@ -123,7 +138,7 @@ export function EntryForm({ type, entries, onChange }) {
               <p className="text-sm text-muted-foreground">
                 {item.current
                   ? `${item.startDate} - Present`
-                  : `${item.startDate} - ${item.endDate}`}
+                  : `${item.startDate} - ${item.endDate || ""}`}
               </p>
               <p className="mt-2 text-sm whitespace-pre-wrap">
                 {item.description}
@@ -141,11 +156,7 @@ export function EntryForm({ type, entries, onChange }) {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Input
-                  placeholder="Title/Position"
-                  {...register("title")}
-                
-                />
+                <Input placeholder="Title/Position" {...register("title")} />
                 {errors.title && (
                   <p className="text-sm text-red-500">{errors.title.message}</p>
                 )}
@@ -154,7 +165,6 @@ export function EntryForm({ type, entries, onChange }) {
                 <Input
                   placeholder="Organization/Company"
                   {...register("organization")}
-               
                 />
                 {errors.organization && (
                   <p className="text-sm text-red-500">
@@ -166,11 +176,7 @@ export function EntryForm({ type, entries, onChange }) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Input
-                  type="month"
-                  {...register("startDate")}
-                
-                />
+                <Input type="month" {...register("startDate")} />
                 {errors.startDate && (
                   <p className="text-sm text-red-500">
                     {errors.startDate.message}
@@ -182,7 +188,6 @@ export function EntryForm({ type, entries, onChange }) {
                   type="month"
                   {...register("endDate")}
                   disabled={current}
-                
                 />
                 {errors.endDate && (
                   <p className="text-sm text-red-500">
@@ -212,7 +217,6 @@ export function EntryForm({ type, entries, onChange }) {
                 placeholder={`Description of your ${type.toLowerCase()}`}
                 className="h-32"
                 {...register("description")}
-              
               />
               {errors.description && (
                 <p className="text-sm text-red-500">

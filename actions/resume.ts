@@ -64,7 +64,7 @@ export async function getResume() {
   });
 }
 
-export async function improveWithAI({ current, type }) {
+export async function improveWithAI({ current, type }:{current:string,type:string}) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 

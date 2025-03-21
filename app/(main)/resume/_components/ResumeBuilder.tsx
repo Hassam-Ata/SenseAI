@@ -118,10 +118,10 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
       const formattedContent = previewContent
-        .replace(/\n/g, "\n") // Normalize newlines
+        .replace(/\n/g, "\n") 
         .replace(/\n\s*\n/g, "\n\n") // Normalize multiple newlines to double newlines
         .trim();
 
@@ -384,9 +384,9 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
           <div className="border rounded-lg">
             <MDEditor
               value={previewContent}
-              onChange={setPreviewContent}
+              onChange={(value) => setPreviewContent(value || "")}
               height={800}
-              preview={resumeMode}
+              preview={resumeMode as 'edit' | 'preview'}
             />
           </div>
 

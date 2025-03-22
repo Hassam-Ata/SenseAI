@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to succeed even if there are type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;

@@ -24,12 +24,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { deleteCoverLetter } from "@/actions/cover-letter";
-import { CoverLetterSchemaType } from "@/app/lib/schema";
+import { CoverLetter } from "@prisma/client";
 
 
 
 
-export default function CoverLetterList({ coverLetters }) {
+export default function CoverLetterList({ coverLetters }:{coverLetters:CoverLetter[]}) {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {

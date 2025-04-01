@@ -8,15 +8,13 @@ const HeroSection = () => {
   return (
     <section className="w-full pt-36 md:pt-48 pb-10">
       <div className="space-y-6 text-center">
-        <div className="space-y-6 mx-auto">
+        <div className="mx-auto space-y-6">
           <h1 className="text-5xl font-bold md:text-6xl lg:text-7xl xl:text-8xl gradient-title">
-            Your AI Career Coach for
-            <br />
-            Professional Success
+            Land Your Dream Job <br /> with AI-Powered Coaching
           </h1>
-          <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl ">
-            Advance your career with personalized guidance,interview prep,and
-            AI-powered tools for job success.
+          <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl">
+            Get expert guidance, ace interviews, and level up your career with
+            AI-driven insights.
           </p>
         </div>
         <div>
@@ -27,9 +25,7 @@ const HeroSection = () => {
               </Button>
             </Link>
           </div>
-          <div>
-         
-          </div>
+          <div></div>
         </div>
       </div>
     </section>

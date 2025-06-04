@@ -40,7 +40,14 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
   } = useForm({
     resolver: zodResolver(resumeSchema),
     defaultValues: {
-      contactInfo: {},
+
+        contactInfo: {
+        email: "",
+        mobile: "",
+        linkedin: "",
+        twitter: "",
+      },
+     
       summary: "",
       skills: "",
       experience: [],

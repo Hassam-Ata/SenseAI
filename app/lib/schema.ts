@@ -1,4 +1,3 @@
-import { Organization } from "@clerk/nextjs/server";
 import { z } from "zod";
 export const onboardingSchema = z.object({
   industry: z.string({ required_error: "Please select an industry" }),

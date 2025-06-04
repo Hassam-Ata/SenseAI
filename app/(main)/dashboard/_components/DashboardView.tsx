@@ -26,7 +26,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { itxClientDenyList } from "@prisma/client/runtime/library";
+
 
 const DashboardView = ({ insights }: any) => {
   const salaryData = insights.salaryRanges.map((range: any) => ({

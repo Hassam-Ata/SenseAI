@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -78,7 +77,7 @@ export default function CoverLetterGenerator() {
                   placeholder="Enter company name"
                   {...register("companyName")}
                 />
-                {errors.companyName && (
+                {errors.companyName?.message && (
                   <p className="text-sm text-red-500">
                     {errors.companyName.message}
                   </p>

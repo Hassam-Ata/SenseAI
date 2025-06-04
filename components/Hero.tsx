@@ -2,8 +2,6 @@
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
-import Image from "next/image";
-
 const HeroSection = () => {
   return (
     <section className="w-full pt-36 md:pt-48 pb-10">

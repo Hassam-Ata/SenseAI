@@ -5,10 +5,10 @@ import db from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY is not set in environment variables.");
-  }
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// if (!process.env.GEMINI_API_KEY) {
+//     throw new Error("GEMINI_API_KEY is not set in environment variables.");
+//   }
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function generateCoverLetter(data:CoverLetterSchemaType) {

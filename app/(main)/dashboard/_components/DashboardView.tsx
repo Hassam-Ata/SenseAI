@@ -26,9 +26,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { IndustryInsight } from "@prisma/client";
 
-
-const DashboardView = ({ insights }: any) => {
+const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
   const salaryData = insights.salaryRanges.map((range: any) => ({
     name: range.role,
     min: range.min / 1000,
@@ -193,7 +193,7 @@ const DashboardView = ({ insights }: any) => {
           </CardHeader>
           <CardContent>
             <ul className="space-y-4">
-              {insights.keyTrends.map((trend: string, index: string) => (
+              {insights.keyTrends.map((trend: string, index: number) => (
                 <li key={index} className=" flex items-start space-x-2">
                   <div className="h-2 w-2 mt-2 rounded-full bg-primary" />
                   <span>{trend}</span>

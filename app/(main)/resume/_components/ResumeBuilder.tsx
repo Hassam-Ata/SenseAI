@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MDEditor from "@uiw/react-md-editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import html2pdf from "html2pdf.js/dist/html2pdf.min.js";
+// Remove the static import of html2pdf
+// import html2pdf from "html2pdf.js/dist/html2pdf.min.js";
 import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/useFetch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,14 +41,12 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
   } = useForm({
     resolver: zodResolver(resumeSchema),
     defaultValues: {
-
-        contactInfo: {
+      contactInfo: {
         email: "",
         mobile: "",
         linkedin: "",
         twitter: "",
       },
-     
       summary: "",
       skills: "",
       experience: [],
@@ -90,6 +89,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
       : "";
   };
+
   const getCombinedContent = () => {
     const { summary, skills, experience, education, projects } = formValues;
 
@@ -105,9 +105,14 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
       .join("\n\n");
   };
 
+  // FIXED: Dynamic import for html2pdf
   const generatePDF = async () => {
     setIsGenerating(true);
     try {
+      // Dynamically import html2pdf only when needed
+      const html2pdf = (await import("html2pdf.js/dist/html2pdf.min.js"))
+        .default;
+
       const element = document.getElementById("resume-pdf");
       const opt = {
         margin: [15, 15],
@@ -128,7 +133,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
   const onSubmit = async (data: any) => {
     try {
       const formattedContent = previewContent
-        .replace(/\n/g, "\n") 
+        .replace(/\n/g, "\n")
         .replace(/\n\s*\n/g, "\n\n") // Normalize multiple newlines to double newlines
         .trim();
 
@@ -393,7 +398,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
               value={previewContent}
               onChange={(value) => setPreviewContent(value || "")}
               height={800}
-              preview={resumeMode as 'edit' | 'preview'}
+              preview={resumeMode as "edit" | "preview"}
             />
           </div>
 
@@ -413,4 +418,5 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     </div>
   );
 };
+
 export default ResumeBuilder;

@@ -23,14 +23,11 @@ const Header = async () => {
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/">
-          <Image
-            src="/logo.png"
-            alt="logo"
-            width={200}
-            height={60}
-            className="h-12 w-auto py-1 object-contain"
-          />
+        <Link
+          href="/"
+          className="text-2xl font-bold md:text-2xl lg:text-2xl xl:text-2xl gradient-title"
+        >
+          Career Forge
         </Link>
         <div className="flex items-center space-x-2 md:space-x-4">
           <SignedIn>
@@ -68,6 +65,7 @@ const Header = async () => {
                 <DropdownMenuItem>
                   <Link href={"/interview"} className="flex items-center gap-2">
                     <GraduationCap className="h-4 w-4" />
+
                     <span>Interview Prep</span>
                   </Link>
                 </DropdownMenuItem>

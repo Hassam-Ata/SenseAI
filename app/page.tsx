@@ -10,13 +10,12 @@ import { faqs } from "@/data/faq";
 import { features } from "@/data/features";
 import { howItWorks } from "@/data/howItWorks";
 
-
 export default function Home() {
   return (
     <>
       <div className="grid-background "></div>
       <HeroSection />
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
+      <section className="w-full py-12 md:py-24 lg:py-32 ">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter text-center mb-12">
             Powerful Features for Your Career Growth
@@ -47,9 +46,7 @@ export default function Home() {
         </div>
       </section>
 
-      
-
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
+      <section className="w-full py-12 md:py-24 lg:py-32 ">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl font-bold tracking-tighter text-center mb-12">
@@ -83,8 +80,6 @@ export default function Home() {
         </div>
       </section>
 
-  
-
       {/* FAQ Section */}
       <section className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
@@ -111,7 +106,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
     </>
   );
 }
